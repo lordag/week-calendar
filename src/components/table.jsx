@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Fragment } from "react";
 import LessonForm from "./lessonForm";
 import {validateHoursWeekly, validLessonPosition} from '../utils/validation'
 import Modal from "./modal";
@@ -97,33 +97,27 @@ const Table = () => {
 
     return(
         <>
-            <table> 
-                <thead>
-                    <tr>
-                        <th></th>
-                        {data.days.map((day) => <th key={day}>{day}</th> )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.timetables.map((time, timeIndex) => (
-                        <tr key={`${time}-${timeIndex}`}>
-                            <th className="time">{time}:00</th>
-                            {data.days.map((day, dayIndex) => (
-                                <td
-                                    className={`
-                                        ${cellInfo.timeIndex === timeIndex && cellInfo.dayIndex === dayIndex ? 'selected' : ''} 
-                                        ${data.lessons[timeIndex][dayIndex] !== null ? 'occupied' : ''}
-                                    `}
-                                    key={`${day}-${dayIndex}`}
-                                    onClick={() => handleShowForm({dayIndex, timeIndex})}
-                                >
-                                    <Cell values={data.lessons[timeIndex][dayIndex]} />
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>        
-            </table>
+            <div className="calendar">
+                <div className="header empty"></div>
+                {data.days.map((day) => <div className="header" key={day}>{day}</div> )}
+
+                {data.timetables.map((time, timeIndex) => (
+                    <Fragment key={`${time}-${timeIndex}`}>
+                        <div className="time"><span>{time}:00</span></div>
+                        {data.days.map((day, dayIndex) => (
+                            <div
+                                data-day={day.slice(0,3)}
+                                className={`time-cell ${data.lessons[timeIndex][dayIndex] !== null ? 'occupied' : ''}`}
+                                key={`${day}-${dayIndex}`}
+                                onClick={() => handleShowForm({dayIndex, timeIndex})}
+                            >
+                                <Cell values={data.lessons[timeIndex][dayIndex]} />
+                            </div>
+                        ))}
+                    </Fragment>
+                ))}
+            </div>
+
             <Modal ref={modal} error={error}>
                 <LessonForm submit={handleSubmit} subjects={subjects} professors={professors}/>
             </Modal>

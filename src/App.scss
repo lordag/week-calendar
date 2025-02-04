@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+$white: #ffffff;
+$gray: #ccc;
+$dark-gray: #0000008c;
+$blue: #2768c9;
+
 *{
   margin: 0px;
   padding: 0px
@@ -10,7 +15,6 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 100vh;
 }
 
 main {
@@ -25,69 +29,75 @@ main {
     padding: 0rem 3rem;
   }
 
-  table{
-    width: 100%;
-    padding: 0rem;
-    margin: 0rem;
+  .calendar {
+    display: grid;
+    grid-template-columns: 150px repeat(5, 1fr); /* Colonna orari + 5 giorni */
+    gap: 1px; /* Spazio tra le celle */
+    background-color: $gray; /* Colore dei bordi */
 
-    thead{
-      background-color: #2768c9;
-      margin: 0rem;
-      padding: 0rem;
-      color: #fff;
-
-      th{
-        padding: 2rem;
-      }
+    .header, .time, .time-cell {
+      text-align: center;
+      background-color: $white; /* Colore di sfondo delle celle */
     }
 
-    tbody{
-      td{
-        padding: 2rem;
-        background-color: #dfdfdf;
-        height: 3rem;
+    .header {
+      font-weight: bold;
+      background-color: $blue;
+      color: $white;
+      padding: 1.5rem;
+    }
+    
+    .time {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $blue;
+      font-weight: bold;
+      color: $white;
+      padding: 1.5rem;
+    }
 
-        &:hover{
-          cursor: pointer;
-          background-color: #f0efef;
-        }
+    & .time-cell{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #f4f4f4;
 
-        &.selected{
-          background-color: #2768c9;
-          color: #fff;
-        }
-
-        &.occupied{
-          background-color: #faf6f6;
-          color: #2768c9;
-        }
-
-        div.cell{
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-
-          & .subject{
-            font-size: 1rem;
-          }
-  
-          & .professor{
-            font-size: .8rem;
-          }
-
-        }
-
+      &:hover{
+        cursor: pointer;
+        background-color: #cdffdb;
       }
 
-      & th.time {
-        background-color: #2768c9;
-        text-align: center;
+      &.selected{
+        background-color: $blue;
         color: #fff;
       }
-      
-    }
-  }
 
+      &.occupied{
+        background-color: $white;
+        color: $blue;
+      }
+
+      & .subject{
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      & .professor{
+        font-size: .8rem;
+      }
+    }
+
+    & .cell{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+  }
+  
 }
 
 .modal {
@@ -98,13 +108,13 @@ main {
   transform: translate(-50%, -50%);
   padding: 20px;
   border: none;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: $white;
+  box-shadow: 0 0 10px $gray;
   z-index: 1000;
   border-radius: 1rem;
 
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: $dark-gray;;
   }
   
   & .content{
@@ -119,7 +129,8 @@ main {
     & p{
       color: red;
       font-size: 0.8rem;
-      padding: 0rem 2rem;
+      padding: 0rem;
+      font-weight: 600;
     }
 
     & button{
@@ -168,4 +179,39 @@ main {
 
 }
 
+  /* Responsive Design */
+  @media screen and (max-width: 768px){
+    main{
+      height: unset;
+      width: 100vw;
 
+      .section{
+        padding: 0rem;
+      }
+
+      .calendar {
+        display: flex!important;
+        flex-direction: column!important;
+  
+        .header{
+          display: none;
+        }
+  
+        .time-cell{
+          position: relative;
+          min-height: 3rem;
+
+          &::before{
+            content: attr(data-day);
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #333;
+          }
+        }
+      }
+    }
+
+  }
