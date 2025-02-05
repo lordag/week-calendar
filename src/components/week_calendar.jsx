@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, Fragment } from "react";
 import LessonForm from "./lessonForm";
 import {validateHoursWeekly, validLessonPosition} from '../utils/validation'
 import Modal from "./modal";
+import DesktopCalendar from "./desktop_calendar";
+import MobileCalendar from "./mobile_calendar";
 
 const data_table = {
     lessons: [
@@ -19,18 +21,7 @@ const data_table = {
     days:['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì']
 }
 
-
-const Cell = ({values}) => {
-    if (!values) return <></>;
-    return (
-        <div className="cell">
-            <span className="subject">{values.subject.toUpperCase()}</span>
-            <span className="professor">{values.professor}</span>
-        </div>
-    )
-}
-
-const Table = () => {
+const WeekCalendar = () => {
     const modal = useRef()
     const [data, setData] = useState(data_table);
     const [cellInfo, setCellInfo] = useState({});
@@ -38,11 +29,6 @@ const Table = () => {
 
     const subjects = Object.keys(data.subjects);
     const professors = data.professors;
-
-
-    useEffect(() => {
-        console.log(data.subjects)
-    }, [data])
 
     const handleSubmit = (event, values) => {
         event.preventDefault();
@@ -69,7 +55,7 @@ const Table = () => {
                 subjects: {...prevTable.subjects, [current_values.subject]: prevTable.subjects[current_values.subject] - 1 }
             }))
         }
-
+        // update the state with the new subject
         setData((prevTable) => ({
             ...prevTable,
             subjects: {...prevTable.subjects, [info.subject]: prevTable.subjects[info.subject] + 1 },
@@ -92,32 +78,12 @@ const Table = () => {
         setError(null);
         setCellInfo(selectedCell);
         modal.current.open();
-
     }
 
     return(
         <>
-            <div className="calendar">
-                <div className="header empty"></div>
-                {data.days.map((day) => <div className="header" key={day}>{day}</div> )}
-
-                {data.timetables.map((time, timeIndex) => (
-                    <Fragment key={`${time}-${timeIndex}`}>
-                        <div className="time"><span>{time}:00</span></div>
-                        {data.days.map((day, dayIndex) => (
-                            <div
-                                data-day={day.slice(0,3)}
-                                className={`time-cell ${data.lessons[timeIndex][dayIndex] !== null ? 'occupied' : ''}`}
-                                key={`${day}-${dayIndex}`}
-                                onClick={() => handleShowForm({dayIndex, timeIndex})}
-                            >
-                                <Cell values={data.lessons[timeIndex][dayIndex]} />
-                            </div>
-                        ))}
-                    </Fragment>
-                ))}
-            </div>
-
+            <DesktopCalendar data={data} handleShowForm={handleShowForm}/>
+            <MobileCalendar data={data} handleShowForm={handleShowForm} />
             <Modal ref={modal} error={error}>
                 <LessonForm submit={handleSubmit} subjects={subjects} professors={professors}/>
             </Modal>
@@ -125,4 +91,4 @@ const Table = () => {
     )
   }
 
-export default Table;
+export default WeekCalendar;

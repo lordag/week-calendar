@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 $white: #ffffff;
+$light-gray: #f4f4f4; 
 $gray: #ccc;
 $dark-gray: #0000008c;
 $blue: #2768c9;
@@ -29,7 +30,11 @@ main {
     padding: 0rem 3rem;
   }
 
-  .calendar {
+  .mobile-calendar{
+    display: none;
+  }
+
+  .desktop-calendar {
     display: grid;
     grid-template-columns: 150px repeat(5, 1fr); /* Colonna orari + 5 giorni */
     gap: 1px; /* Spazio tra le celle */
@@ -62,7 +67,7 @@ main {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #f4f4f4;
+      background-color: $light-gray;
 
       &:hover{
         cursor: pointer;
@@ -125,11 +130,13 @@ main {
   & .top{
     display: flex;
     justify-content: space-between;
+    height: 3rem;
 
     & p{
       color: red;
       font-size: 0.8rem;
       padding: 0rem;
+      padding-right: 2rem;
       font-weight: 600;
     }
 
@@ -189,29 +196,69 @@ main {
         padding: 0rem;
       }
 
-      .calendar {
-        display: flex!important;
-        flex-direction: column!important;
-  
-        .header{
-          display: none;
-        }
-  
-        .time-cell{
-          position: relative;
-          min-height: 3rem;
-
-          &::before{
-            content: attr(data-day);
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: bold;
-            color: #333;
-          }
-        }
+      .desktop-calendar{
+        display: none;
       }
+
+      .mobile-calendar{
+        display: flex;
+        flex-direction: column;
+
+        & .header {
+          text-align: center;
+          font-weight: bold;
+          background-color: $blue;
+          color: $white;
+          padding: 1.5rem;
+        }
+
+        & .time-cell{
+          display: flex;
+          flex-direction: row;
+          background-color: $light-gray;
+          border-bottom: 1px solid $white;
+          min-height: 5rem;
+
+          & .time{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 6rem;
+            background-color: $gray;
+            color: $white;
+            font-weight: 600;
+          }
+
+          &.occupied{
+            background-color: $white;
+            color: $blue;
+          }
+    
+          & .subject{
+            font-size: 1rem;
+            font-weight: 600;
+          }
+    
+          & .professor{
+            font-size: .8rem;
+          }
+
+          & .cell{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+          }
+
+        }
+
+      }
+
+      .modal{
+        min-width: 70%;
+      }
+
     }
 
   }

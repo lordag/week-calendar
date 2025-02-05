@@ -1,5 +1,5 @@
 import './App.scss'
-import Table from './components/table'
+import WeekCalendar from './components/week_calendar'
 
 function App() {
 
@@ -7,7 +7,7 @@ function App() {
     <>
       <main>
           <section>
-            <Table />
+            <WeekCalendar />
           </section>
       </main>
     </>
