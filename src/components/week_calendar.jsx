@@ -50,8 +50,6 @@ const WeekCalendar = ({data, updateData}) => {
         setCellInfo({})
     }
 
-
-
     const handleRemove = (values) => {
         updateData((prevData) => ({
             ...prevData,

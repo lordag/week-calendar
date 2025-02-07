@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import WeekCalendar from './components/week_calendar'
 import Modal from './components/modal';
 import List from './components/list';
+import Input from './components/input';
 
 const data_table = {
     lessons: [
@@ -51,6 +52,26 @@ function App() {
     professorsModal.current.open();
   }
 
+  const handleAddSubject = (subject) => {
+    console.log("add subjects", subject)
+    setData((prevData) => (
+      {
+        ...prevData, 
+        subjects: [...prevData.subjects, {name: subject, count: 0}]
+      }
+    ))
+  }
+
+  const handleAddProfessor = (professor) => {
+    console.log("add profs", professor)
+    setData((prevData) => (
+      {
+        ...prevData, 
+        professors: [...prevData.professors, {name: professor, count: 0}]
+      }
+    ))
+  }
+
   return (
     <>
       <main>
@@ -65,9 +86,11 @@ function App() {
               <>
                 <Modal ref={subjectsModal}>
                   <List title="Subject" elems={data.subjects} />
+                  <Input label="Subject" data={data.subjects} updateData={handleAddSubject} />
                 </Modal>
                 <Modal ref={professorsModal}>
                   <List title="Professors" elems={data.professors} />
+                  <Input label="Professor" data={data.professors} updateData={handleAddProfessor} />
                 </Modal>
                 <WeekCalendar data={data} updateData={setData} />
               </>

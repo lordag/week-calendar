@@ -154,24 +154,25 @@ main {
       gap: 0.5rem;
 
       & button{
-          background-color: $light-blue;
+          background-color: $blue;
           color: #fff;
           border: none;
-          padding: 1rem 2rem;
-          border-radius: 1rem;
+          padding: 1rem 1.5rem;
+          border-radius: 0.5rem;
           cursor: pointer;
           font-weight: 600;
+          transition: background-color 1s;
   
         &:hover{
-          background-color: $blue;
+          background-color: $light-blue;
         }
 
         &.remove{
-          background-color: $light-red;
+          background-color: $red;
           color: $white;
 
           &:hover{
-            background-color: $red;
+            background-color: $light-red;
           }
         }
     
@@ -218,24 +219,53 @@ main {
         }
       }
     }
-    // &__title{
-    //   background-color: $light-blue;
-    //   color: $white;
-    //   padding: 1rem;
-    // }
-    // &__items{
-    //     list-style-type: none;
-    //     padding: 0.5rem 0rem;
+  }
 
-    //     &__elem{
-    //       padding: 0.5rem;
+  .input__field{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin: 2rem 0rem;
+    border-top: 1px solid $dark-gray;
+    padding: 1rem;
 
-    //       &:nth-child(even) {
-    //         background-color: $light-gray; /* Colore per le righe pari */
-    //       }
-    //     }
-    // }
+    &__label{
+      color: $blue;
+    }
 
+    &__container{
+      display: flex;
+      gap: 0.5rem;
+
+      &__input{
+        flex: 1;
+        padding: 1rem;
+        border: 1px solid $blue
+      }
+
+      &__button{
+        cursor: pointer;
+        background-color: $blue;
+        color: $white;
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+        border: none;
+        // border-radius: 0.5rem;
+        transition: background-color 1s;
+
+        &:hover{
+          background-color: $light-blue;
+        }
+
+        &:disabled{
+          background-color: $gray;
+        }
+      }
+    }
+    &__error{
+      color: $red;
+    }
   }
 }
 

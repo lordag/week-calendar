@@ -17,5 +17,4 @@ const List = ({elems, title}) => {
     )
 }
 
-
 export default List;
