@@ -5,6 +5,9 @@ $light-gray: #f4f4f4;
 $gray: #ccc;
 $dark-gray: #0000008c;
 $blue: #2768c9;
+$light-blue: #5c9af7;
+$red: #f44336;
+$light-red: #f96060;
 
 *{
   margin: 0px;
@@ -20,7 +23,9 @@ body{
 
 main {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 0.5rem;
   align-items: center;
   height: 100vh;
   width: 80vw;
@@ -28,6 +33,29 @@ main {
   section{
     width: 100%;
     padding: 0rem 3rem;
+
+    & .actions{
+      //background-color: $light-gray ;
+      display: grid;
+      grid-template-columns: 1fr repeat(5, 1fr); /* Colonna orari + 5 giorni */
+      gap: 1px;
+
+      button{
+        background-color: $white;
+        border: none;
+        cursor: pointer;
+        border: 1px solid $blue;
+        color: $blue;
+        padding: 1.5rem;
+        transition: background-color 1s;
+
+        &:hover{
+          background-color: $light-blue;
+          color: $white;
+
+        }
+      }
+    }
   }
 
   .mobile-calendar{
@@ -102,7 +130,113 @@ main {
     }
 
   }
+
+  .form{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   
+    &__items{
+      display: flex;
+      gap: 0.5rem;
+      flex-direction: column;
+  
+      select{
+        border: 1px solid $blue;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+    }
+    
+    &__buttons{
+      display: flex;
+      justify-content: end;
+      gap: 0.5rem;
+
+      & button{
+          background-color: $light-blue;
+          color: #fff;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 1rem;
+          cursor: pointer;
+          font-weight: 600;
+  
+        &:hover{
+          background-color: $blue;
+        }
+
+        &.remove{
+          background-color: $light-red;
+          color: $white;
+
+          &:hover{
+            background-color: $red;
+          }
+        }
+    
+        &:disabled{
+          background-color: $gray;
+        }
+      }
+    }
+  
+  }
+  
+  .list{
+    &__header{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1px;
+      background-color: $light-blue;
+      color: $white;
+      padding: 1rem;
+      font-weight: 600;
+
+    }
+    &__items{
+
+      &__elem{
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 1px;
+        padding: 1rem;
+        color: $dark-gray;
+
+        &:nth-child(even) {
+          background-color: $light-gray;          
+        }
+
+        &__title{
+        }
+        &__count{
+          min-width: 3rem;
+          text-align: center;          
+          font-weight: 600;
+        }
+      }
+    }
+    // &__title{
+    //   background-color: $light-blue;
+    //   color: $white;
+    //   padding: 1rem;
+    // }
+    // &__items{
+    //     list-style-type: none;
+    //     padding: 0.5rem 0rem;
+
+    //     &__elem{
+    //       padding: 0.5rem;
+
+    //       &:nth-child(even) {
+    //         background-color: $light-gray; /* Colore per le righe pari */
+    //       }
+    //     }
+    // }
+
+  }
 }
 
 .modal {
@@ -154,37 +288,7 @@ main {
 
 }
 
-.form{
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 
-  &__items{
-    display: flex;
-    gap: 0.5rem;
-    flex-direction: column;
-
-    select{
-      border: 1px solid #2768c9;
-      padding: 1rem;
-      border-radius: 0.5rem;
-    }
-  }
-
-  &__button{
-    background-color: #2768c9;
-    color: #fff;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 1rem;
-    cursor: pointer;
-
-    &:disabled{
-      background-color: #dfdfdf;
-    }
-  }
-
-}
 
   /* Responsive Design */
   @media screen and (max-width: 768px){

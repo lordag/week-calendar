@@ -1,38 +1,25 @@
-import { useState, useRef, useEffect, Fragment } from "react";
+import { useState, useRef} from "react";
 import LessonForm from "./lessonForm";
 import {validateHoursWeekly, validLessonPosition} from '../utils/validation'
+import {manageObjectCount, decreaseObjectCount, updateLessons} from '../utils/data_utils'
 import Modal from "./modal";
 import DesktopCalendar from "./desktop_calendar";
 import MobileCalendar from "./mobile_calendar";
 
-const data_table = {
-    lessons: [
-        [null,null,null,null,null],
-        [null,null,null,null,null],
-        [null,null,null,null,null],
-        [null,null,null,null,null],
-        [null,null,null,null,null],
-        [null,null,null,null,null],
-    ],
-    subjects: {storia: 0, matematica: 0, fisica: 0},
-    professors: ['Rossi', 'Gialli', 'Verdi'],
-    subject_time_limit: 5,
-    timetables: [8,9,10,11,12,13],
-    days:['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì']
-}
 
-const WeekCalendar = () => {
+const WeekCalendar = ({data, updateData}) => {
+
     const modal = useRef()
-    const [data, setData] = useState(data_table);
+    
     const [cellInfo, setCellInfo] = useState({});
     const [error, setError] = useState(null);
-
-    const subjects = Object.keys(data.subjects);
-    const professors = data.professors;
 
     const handleSubmit = (event, values) => {
         event.preventDefault();
         const info = {...values, ...cellInfo}
+        // Get the value of the cell before update
+        const current_values = data.lessons[info.timeIndex][info.dayIndex]
+        let new_data = {};
 
         if (!validateHoursWeekly(info.subject, data)){
             setError('The number of hours of a lesson cannot be more than 5 in a week')
@@ -44,35 +31,42 @@ const WeekCalendar = () => {
             return
         }
 
-        // Get the value of the cell before update
-        let current_values = data.lessons[info.timeIndex][info.dayIndex]
         // If the current value is the same of the incoming value return
-        if(current_values && current_values.subject === values.subject) return
-        // If the current value is not equal to incoming value update the subject counter
-        if (current_values && current_values.subject !== values.subject){
-            setData((prevTable) => ({
-                ...prevTable,
-                subjects: {...prevTable.subjects, [current_values.subject]: prevTable.subjects[current_values.subject] - 1 }
-            }))
-        }
+        if(current_values && current_values.subject === values.subject && current_values.professor === values.professor ) return
+        
+        // Manage counter of subjects and professors
+        new_data = manageObjectCount(data, current_values, info);
+        
         // update the state with the new subject
-        setData((prevTable) => ({
-            ...prevTable,
-            subjects: {...prevTable.subjects, [info.subject]: prevTable.subjects[info.subject] + 1 },
-            lessons: prevTable.lessons.map((row, index) => {
-                if (index === info.timeIndex) {
-                const data_row = [...row];
-                data_row[info.dayIndex] = { subject: info.subject, professor: info.professor };
-                return data_row;
-                }
-                return row;
-            }),
+        updateData((prevData) => ({
+            ...prevData,
+            subjects: new_data.subjects,
+            professors: new_data.professors,
+            lessons: updateLessons(prevData.lessons, info)
         }));
 
         modal.current.close();                
         setError(null);
         setCellInfo({})
     }
+
+
+
+    const handleRemove = (values) => {
+        updateData((prevData) => ({
+            ...prevData,
+            lessons: prevData.lessons.map((row, index) => {                
+                if (index === cellInfo.timeIndex) {                    
+                    row[cellInfo.dayIndex] = null;
+                    modal.current.close();
+                    return row
+                }
+                return row
+            }),
+            subjects: decreaseObjectCount(prevData.subjects, values.subject),
+            professors: decreaseObjectCount(prevData.professors, values.professor)
+        }))
+    } 
 
     const handleShowForm = (selectedCell) => {              
         setError(null);
@@ -85,7 +79,7 @@ const WeekCalendar = () => {
             <DesktopCalendar data={data} handleShowForm={handleShowForm}/>
             <MobileCalendar data={data} handleShowForm={handleShowForm} />
             <Modal ref={modal} error={error}>
-                <LessonForm submit={handleSubmit} subjects={subjects} professors={professors}/>
+                <LessonForm submitFunc={handleSubmit} removeFunc={handleRemove} data={data} cellInfo={cellInfo}/>
             </Modal>
         </>
     )

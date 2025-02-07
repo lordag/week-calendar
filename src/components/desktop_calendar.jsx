@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import Cell from "./cell";
 
 const DesktopCalendar = ({data, handleShowForm}) => {
+
     return (
         <div className="desktop-calendar">
             <div className="header empty"></div>
@@ -22,7 +23,6 @@ const DesktopCalendar = ({data, handleShowForm}) => {
                     ))}
                 </Fragment>
             ))}
-
         </div>
     )
 }

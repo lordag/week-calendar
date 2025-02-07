@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import Cell from "./cell";
 
 const MobileCalendar = ({data, handleShowForm}) => {
+
     return (
         <div className="mobile-calendar">
             {data.days.map((day, dayIndex) => {

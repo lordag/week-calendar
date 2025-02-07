@@ -1,5 +1,6 @@
 export const validateHoursWeekly = (subject, data) => {
-    if(data.subjects[subject] < data.subject_time_limit) return true;
+    const count = data.subjects.find(subj => subj.name === subject).count;
+    if(count < data.subject_time_limit) return true;
     return false
 }
 
@@ -15,7 +16,7 @@ export const validLessonPosition = (timeIndex, dayIndex, subject, data) => {
     });
 
     if (subject_indexs.length === 0) is_valid =  true;
-    
+
     // check if the lesson cell is adjacent to those already inserted via the indexes
     for (let present_index of subject_indexs){
         if (present_index === timeIndex) is_valid = true;
