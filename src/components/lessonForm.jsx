@@ -5,8 +5,6 @@ const LessonForm = ({submitFunc, removeFunc, data, cellInfo}) => {
     const [cellData, setCellData] = useState(default_data)
     const [dataIn, setDataIn] = useState(false);
 
-    // const subjects = Object.keys(data.subjects);
-    // const professors= Object.keys(data.professors);
     const subjects = data.subjects;
     const professors= data.professors;
     const lessons = data.lessons

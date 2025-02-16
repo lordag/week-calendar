@@ -4,6 +4,7 @@ import WeekCalendar from './components/week_calendar'
 import Modal from './components/modal';
 import ResumeObjects from './components/resume_objects';
 import StartPage from './components/start_page';
+import useUpdate from './hook/useUpdate';
 
 const data_table = {
     lessons: [
@@ -22,31 +23,16 @@ const data_table = {
 }
 
 function App() {
-  const [data, setData] = useState();
-
   const initialModal = useRef();
   const subjectsModal = useRef();
   const professorsModal = useRef();
 
-  useEffect(() => {
-      const initial_data = localStorage.getItem('data_table');
-      if(initial_data){
-          setData(JSON.parse(initial_data));           
-      }else{
-          localStorage.setItem('data_table', JSON.stringify(data_table));
-          setData(data_table);
-      }
-      
-  }, [])
+  const {data, setStargeData: setData} = useUpdate(data_table);
 
   useEffect(() => {
-      if (data) {
-        localStorage.setItem('data_table', JSON.stringify(data));
-        
-        if (data && data.subjects.length === 0 && data.professors.length === 0){
-          initialModal.current.open();
-        }
-      }
+    if (data && data.subjects.length === 0 && data.professors.length === 0){
+      initialModal.current.open();
+    }
   }, [data]); 
 
   const handleOpenSubjectsModal = () => {
@@ -58,23 +44,18 @@ function App() {
   }
 
   const handleAddSubject = (subject) => {
-    setData((prevData) => (
-      {...prevData, subjects: [...prevData.subjects, {name: subject, count: 0}] }
-    ))
+    setData({subjects: [...data.subjects, {name: subject, count: 0}] })
   }
 
   const handleAddProfessor = (professor) => {
-    setData((prevData) => (
-      {...prevData, professors: [...prevData.professors, {name: professor, count: 0}] }
-    ))
+    setData({professors: [...data.professors, {name: professor, count: 0}] })
   }
 
   const handleAddObjects = (values) => {
-    setData((prevData) => ({
-      ...prevData,
+    setData({      
       subjects: [{name: values.subject, count: 0}],
       professors: [{name: values.professor, count: 0}]
-    }))
+    })
     initialModal.current.close();
   }
 
@@ -90,6 +71,9 @@ function App() {
           <section>
             { data && 
               <>
+                <Modal ref={initialModal}>
+                  <StartPage data={data.subjects} updateData={handleAddObjects} />
+                </Modal>
                 <Modal ref={subjectsModal}>
                   <ResumeObjects label="Subject" data={data.subjects} updateData={handleAddSubject} />
                 </Modal>
@@ -98,10 +82,6 @@ function App() {
                 </Modal>
 
                 <WeekCalendar data={data} updateData={setData} />
-                
-                <Modal ref={initialModal}>
-                  <StartPage data={data.subjects} updateData={handleAddObjects} />
-                </Modal>
               </>
             }
           </section>

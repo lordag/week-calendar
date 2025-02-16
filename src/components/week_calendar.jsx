@@ -37,13 +37,11 @@ const WeekCalendar = ({data, updateData}) => {
         // Manage counter of subjects and professors
         new_data = manageObjectCount(data, current_values, info);
         
-        // update the state with the new subject
-        updateData((prevData) => ({
-            ...prevData,
+        updateData({
             subjects: new_data.subjects,
             professors: new_data.professors,
-            lessons: updateLessons(prevData.lessons, info)
-        }));
+            lessons: updateLessons(data.lessons, info)
+        });
 
         modal.current.close();                
         setError(null);
@@ -51,9 +49,8 @@ const WeekCalendar = ({data, updateData}) => {
     }
 
     const handleRemove = (values) => {
-        updateData((prevData) => ({
-            ...prevData,
-            lessons: prevData.lessons.map((row, index) => {                
+        updateData({
+            lessons: data.lessons.map((row, index) => {                
                 if (index === cellInfo.timeIndex) {                    
                     row[cellInfo.dayIndex] = null;
                     modal.current.close();
@@ -61,9 +58,9 @@ const WeekCalendar = ({data, updateData}) => {
                 }
                 return row
             }),
-            subjects: decreaseObjectCount(prevData.subjects, values.subject),
-            professors: decreaseObjectCount(prevData.professors, values.professor)
-        }))
+            subjects: decreaseObjectCount(data.subjects, values.subject),
+            professors: decreaseObjectCount(data.professors, values.professor)
+        })
     } 
 
     const handleShowForm = (selectedCell) => {              
